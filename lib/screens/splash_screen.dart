@@ -1,6 +1,10 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_messenger/screens/home_screen.dart';
 import '../../main.dart';
 import 'auth/login_screen.dart';
 
@@ -15,9 +19,16 @@ class _splash_screenState extends State<splash_screen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => const login_screen()));
+    Future.delayed(const Duration(seconds: 2), () {
+      if (FirebaseAuth.instance.currentUser != null) {
+        log('\nUser:${FirebaseAuth.instance.currentUser}');
+
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const login_screen()));
+      }
     });
   }
 

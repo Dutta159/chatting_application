@@ -70,7 +70,11 @@ class _login_screenState extends State<login_screen> {
       return null;
     }
   }
-  
+    //sign out function
+  //_signOut() async{
+  //await FirebaseAuth.instance.signOut();
+  //await  GoogleSignIn().signOut();
+  //}
 
   @override
   Widget build(BuildContext context) {
