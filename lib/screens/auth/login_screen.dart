@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../helper/dialogs.dart';
 import '../../main.dart';
 import '../home_screen.dart';
 
@@ -30,7 +31,9 @@ class _login_screenState extends State<login_screen> {
 
   // ignore: unused_element
   _handleGoogleBtnClick() {
+    Dialogs.showProgressBar(context);
     _signInWithGoogle().then((user) {
+      Navigator.pop(context); // for hiding the progress bar after login
       if (user != null) {
         log('\nUser:${user.user}');
         log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
@@ -43,7 +46,6 @@ class _login_screenState extends State<login_screen> {
     });
   }
 
-  // ignore: unused_element, body_might_complete_normally_nullable
   Future<UserCredential?> _signInWithGoogle() async {
     try {
       await InternetAddress.lookup("google.com");
@@ -64,8 +66,11 @@ class _login_screenState extends State<login_screen> {
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
       log("_signInWithGoogle: $e");
+      Dialogs.showSnackBar(context, "Connect to Internet");
+      return null;
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
