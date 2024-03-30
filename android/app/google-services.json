@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1020447797202",
+    "project_id": "first-vapas",
+    "storage_bucket": "first-vapas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020447797202:android:05656b7def3f957b5ee20b",
+        "android_client_info": {
+          "package_name": "com.example.my_messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020447797202-ut6tui9rm7th0gcm2m0i43a5obedcil9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.my_messenger",
+            "certificate_hash": "1b931353dd459696e1c0349fda8422cfc4a7a8fd"
+          }
+        },
+        {
+          "client_id": "1020447797202-k62psfq13j8f6u3enk9gfmoenal5engu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqQGZ3l474s5R5SvsbZSZSFPeEwjXLvxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020447797202-k62psfq13j8f6u3enk9gfmoenal5engu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1020447797202-4i9ubr4mpikk9r0rnigufo88s5a8kltn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.myMessenger"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
