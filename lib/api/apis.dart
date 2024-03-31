@@ -62,4 +62,12 @@ class APIs {
                 user.uid) //this will get all the users except the current user
         .snapshots();
   }
+
+  //function for updating user information
+  static Future<void> updateUserInfo() async {
+    await firestore
+        .collection('users')
+        .doc(user.uid)
+        .update({'name': me.name, 'about': me.about});
+  }
 }
