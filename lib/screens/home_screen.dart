@@ -4,6 +4,7 @@ import 'package:my_messenger/models/chat_user.dart';
 import '../api/apis.dart';
 import '../main.dart';
 import '../widgets/chat_user_card.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,7 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => ProfileScreen(user: list[0])));
+                },
+                icon: const Icon(Icons.more_vert))
           ],
         ),
         //This is the bottom floating action button to add new user
