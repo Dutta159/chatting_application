@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_messenger/models/chat_user.dart';
 import '../api/apis.dart';
+import '../helper/dialogs.dart';
 import '../main.dart';
+import 'auth/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final ChatUser user;
@@ -30,8 +33,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
           //The extended button allows us to add label along with the icon
           child: FloatingActionButton.extended(
             onPressed: () async {
-              await APIs.auth.signOut();
-              await GoogleSignIn().signOut();
+              //for showing progress dialog
+              Dialogs.showProgressBar(context);
+              //for sign out
+              await APIs.auth.signOut().then((value) async {
+                await GoogleSignIn().signOut().then((value) {
+                  //for hiding progress dialog
+                  Navigator.pop(context);
+                  //This wil pop out our profile screen and display the main screen
+                  Navigator.pop(context);
+                  //No the push replacement will replace the home screen with the login screen
+                  Navigator.pushReplacement(
+                      context, //this is used to replace the current screen with the login screen after logging out
+                      MaterialPageRoute(builder: (_) => const login_screen()));
+                });
+              });
             },
             icon: const Icon(Icons.logout),
             label: const Text("Logout"),
@@ -43,17 +59,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               //Size box is used for adding the empty space on the screen
               SizedBox(width: mq.width, height: mq.height * 0.03),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(mq.height * 0.1),
-                child: CachedNetworkImage(
-                  width: mq.height * 0.2,
-                  height: mq.height * 0.2,
-                  fit: BoxFit.fill,
-                  imageUrl: widget.user.image,
-                  errorWidget: (context, url, error) => const CircleAvatar(
-                    child: Icon(CupertinoIcons.person),
+              Stack(
+                //used to add teh edit button over the profile picture
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(mq.height * 0.1),
+                    child: CachedNetworkImage(
+                      width: mq.height * 0.2,
+                      height: mq.height * 0.2,
+                      fit: BoxFit.fill,
+                      imageUrl: widget.user.image,
+                      errorWidget: (context, url, error) => const CircleAvatar(
+                        child: Icon(CupertinoIcons.person),
+                      ),
+                    ),
                   ),
-                ),
+                  //profile picture edit image button
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: MaterialButton(
+                      onPressed: () {},
+                      color: Colors.white70,
+                      shape: const CircleBorder(),
+                      child: const Icon(Icons.edit),
+                    ),
+                  )
+                ],
               ),
               SizedBox(height: mq.height * 0.03),
               Text(widget.user.email,
