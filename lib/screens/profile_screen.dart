@@ -152,7 +152,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             _formkey.currentState!
                                 .save(); //This wil save data after the update button is pressed
                             log("Inside validator");
-                            APIs.updateUserInfo();
+                            APIs.updateUserInfo().then((value) {
+                              Dialogs.showSnackBar(
+                                  context, "Profile SuccessFully updated");
+                            });
                           }
                         },
                         icon: const Icon(
