@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:my_messenger/widgets/chat_user_card.dart';
-
+import 'package:my_messenger/models/chat_user.dart';
 import '../api/apis.dart';
 import '../main.dart';
+import '../widgets/chat_user_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<ChatUser> list = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,13 +39,42 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Icon(Icons.message)),
         ),
         //list builder shows the list dynamically and optimizes the memory
-        body: ListView.builder(
-            padding: EdgeInsets.only(top: mq.height * 0.02),
-            itemCount: 18, //API call here to get the number of users
-            physics:
-                const BouncingScrollPhysics(), //This adds the bouncing effect to the scroll
-            itemBuilder: (context, index) {
-              return const ChatUserCard();
+        body: StreamBuilder(
+            stream: APIs.firestore.collection('users').snapshots(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                //tells whether data is loading of already loaded
+                //if data is loading
+                case ConnectionState.waiting:
+                case ConnectionState.none:
+                  return const Center(child: CircularProgressIndicator());
+                //if some or all data is loaded then
+                case ConnectionState.active:
+                case ConnectionState.done:
+                  final data = snapshot.data?.docs;
+                  list =
+                      data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
+                          [];
+                  if (list.isNotEmpty) {
+                    return ListView.builder(
+                        padding: EdgeInsets.only(top: mq.height * 0.02),
+                        itemCount: list
+                            .length, //API call here to get the number of users
+                        physics:
+                            const BouncingScrollPhysics(), //This adds the bouncing effect to the scroll
+                        itemBuilder: (context, index) {
+                          return ChatUserCard(user: list[index]);
+                          // return Text("Name: ${list[index]}");
+                        });
+                  } else {
+                    return const Center(
+                      child: Text(
+                        "No connections Found!",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
+                  }
+              }
             }));
   }
 }
