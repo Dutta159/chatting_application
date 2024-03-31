@@ -33,16 +33,29 @@ class _login_screenState extends State<login_screen> {
   // ignore: unused_element
   _handleGoogleBtnClick() {
     Dialogs.showProgressBar(context);
-    _signInWithGoogle().then((user) {
+    _signInWithGoogle().then((user) async {
       Navigator.pop(context); // for hiding the progress bar after login
+
       if (user != null) {
         log('\nUser:${user.user}');
         log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (_) =>
-                    const HomeScreen())); //This is used because user should not return  to this screen after login
+
+        if (await APIs.userExists()) {
+          Navigator.pushReplacement(
+              // ignore: use_build_context_synchronously
+              context,
+              MaterialPageRoute(
+                  builder: (_) =>
+                      const HomeScreen())); //This is used because user should not return  to this screen after login
+        } else {
+          await APIs.createUser().then((value) {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (_) =>
+                        const HomeScreen())); //This is used because user should not return  to this screen after login
+          });
+        }
       }
     });
   }

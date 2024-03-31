@@ -42,6 +42,8 @@ dependencies:
   google_sign_in: ^6.2.1
 #for connecting the firestore database
   cloud_firestore: ^4.15.10
+#for showing network images
+  cached_network_image: ^3.3.1
 
 dev_dependencies:
   flutter_test:
