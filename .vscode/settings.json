@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "D:/Flutter_projects/Project_chat_app/my_messenger/linux"
+    "cmake.sourceDirectory": "D:/Flutter_projects/Project_chat_app/my_messenger/linux",
+    "cSpell.words": [
+        "Cupertino"
+    ]
 }

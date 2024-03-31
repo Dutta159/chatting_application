@@ -1,11 +1,10 @@
 // ignore_for_file: camel_case_types
 
 import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_messenger/screens/home_screen.dart';
 import '../../main.dart';
+import '../api/apis.dart';
 import 'auth/login_screen.dart';
 
 class splash_screen extends StatefulWidget {
@@ -20,8 +19,8 @@ class _splash_screenState extends State<splash_screen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 2), () {
-      if (FirebaseAuth.instance.currentUser != null) {
-        log('\nUser:${FirebaseAuth.instance.currentUser}');
+      if (APIs.auth.currentUser != null) {
+        log('\nUser:${APIs.auth.currentUser}');
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => const HomeScreen()));

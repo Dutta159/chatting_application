@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../api/apis.dart';
 import '../../helper/dialogs.dart';
 import '../../main.dart';
 import '../home_screen.dart';
@@ -63,14 +64,15 @@ class _login_screenState extends State<login_screen> {
       );
 
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      return await APIs.auth.signInWithCredential(credential);
     } catch (e) {
       log("_signInWithGoogle: $e");
+      // ignore: use_build_context_synchronously
       Dialogs.showSnackBar(context, "Connect to Internet");
       return null;
     }
   }
-    //sign out function
+  //sign out function
   //_signOut() async{
   //await FirebaseAuth.instance.signOut();
   //await  GoogleSignIn().signOut();
