@@ -1,10 +1,12 @@
 {
     "cmake.sourceDirectory": "D:/Flutter_projects/Project_chat_app/my_messenger/linux",
     "cSpell.words": [
+        "autofocus",
         "Cupertino",
         "firestore",
         "formkey",
         "Haridas",
+        "seearch",
         "unfocus",
         "Yashraj"
     ]
