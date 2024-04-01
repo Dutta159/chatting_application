@@ -47,6 +47,9 @@ dependencies:
 #for picking images
   image_picker: ^1.0.7
 
+#for accessing firebase storage (for uploading files)
+  firebase_storage: ^11.6.11
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

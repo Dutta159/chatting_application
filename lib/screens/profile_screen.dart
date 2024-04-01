@@ -222,13 +222,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
 // Pick an image.
-                        final XFile? image =
-                            await picker.pickImage(source: ImageSource.gallery);
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.gallery,
+                            imageQuality:
+                                80); //Image quality is used to save server space it will reduce the image quality
                         if (image != null) {
                           log('image Path: ${image.path}-- mine type: ${image.mimeType}');
                           setState(() {
                             _image = image.path;
                           });
+                          APIs.updateProfilePicture(File(_image!));
                           //for hiding bottom sheet
                           // ignore: use_build_context_synchronously
                           Navigator.pop(context);
@@ -242,13 +245,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onPressed: () async {
                         final ImagePicker picker = ImagePicker();
 // Pick an image.
-                        final XFile? image =
-                            await picker.pickImage(source: ImageSource.camera);
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.camera, imageQuality: 80);
                         if (image != null) {
                           log('image Path: ${image.path}');
                           setState(() {
                             _image = image.path;
                           });
+                          APIs.updateProfilePicture(File(_image!));
                           //for hiding bottom sheet
                           // ignore: use_build_context_synchronously
                           Navigator.pop(context);
