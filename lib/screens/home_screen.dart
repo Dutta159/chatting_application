@@ -29,106 +29,120 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        //This is the app_bar
-        appBar: AppBar(
-          leading: const Icon(Icons.home),
-          title: _isSearching
-              ? TextField(
-                  decoration: const InputDecoration(
-                      border: InputBorder.none, hintText: "Name, Email,..."),
-                  autofocus:
-                      true, //this will automatically move the cursor on the textfield after the seearch button is clicked
-                  style: const TextStyle(fontSize: 17, letterSpacing: 0.5),
-                  //when search field changes the updated search list
-                  onChanged: (val) {
-                    //search logic
-                    _searchList.clear();
-                    for (var i in _list) {
-                      if (i.name.toLowerCase().contains(val.toLowerCase()) ||
-                          i.email.toLowerCase().contains(val.toLowerCase())) {
-                        _searchList.add(i);
-                      }
+    return GestureDetector(
+      //For hiding the keyboard when tap is detected on screen
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: PopScope(
+        canPop: _isSearching ? false : true,
+        child: Scaffold(
+            //This is the app_bar
+            appBar: AppBar(
+              leading: const Icon(Icons.home),
+              title: _isSearching
+                  ? TextField(
+                      decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Name, Email,..."),
+                      autofocus:
+                          true, //this will automatically move the cursor on the textfield after the seearch button is clicked
+                      style: const TextStyle(fontSize: 17, letterSpacing: 0.5),
+                      //when search field changes the updated search list
+                      onChanged: (val) {
+                        //search logic
+                        _searchList.clear();
+                        for (var i in _list) {
+                          if (i.name
+                                  .toLowerCase()
+                                  .contains(val.toLowerCase()) ||
+                              i.email
+                                  .toLowerCase()
+                                  .contains(val.toLowerCase())) {
+                            _searchList.add(i);
+                          }
+                          setState(() {
+                            _searchList;
+                          });
+                        }
+                      },
+                    )
+                  : const Text(
+                      "Buddy Chat",
+                    ),
+              actions: [
+                //button for searching the users
+                IconButton(
+                    onPressed: () {
                       setState(() {
-                        _searchList;
+                        _isSearching = !_isSearching;
                       });
-                    }
+                    },
+                    icon: Icon(
+                        _isSearching ? CupertinoIcons.clear : Icons.search)),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => ProfileScreen(user: APIs.me)));
+                    },
+                    icon: const Icon(Icons.more_vert))
+              ],
+            ),
+            //This is the bottom floating action button to add new user
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.only(bottom: 10, right: 5),
+              child: FloatingActionButton(
+                  onPressed: () async {
+                    await APIs.auth.signOut();
+                    await GoogleSignIn().signOut();
                   },
-                )
-              : const Text(
-                  "Buddy Chat",
-                ),
-          actions: [
-            //button for searching the users
-            IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isSearching = !_isSearching;
-                  });
-                },
-                icon: Icon(_isSearching ? CupertinoIcons.clear : Icons.search)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => ProfileScreen(user: APIs.me)));
-                },
-                icon: const Icon(Icons.more_vert))
-          ],
-        ),
-        //This is the bottom floating action button to add new user
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 10, right: 5),
-          child: FloatingActionButton(
-              onPressed: () async {
-                await APIs.auth.signOut();
-                await GoogleSignIn().signOut();
-              },
-              child: const Icon(Icons.message)),
-        ),
-        //list builder shows the list dynamically and optimizes the memory
-        body: StreamBuilder(
-            stream: APIs.getAllUsers(),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                //tells whether data is loading of already loaded
-                //if data is loading
-                case ConnectionState.waiting:
-                case ConnectionState.none:
-                  return const Center(child: CircularProgressIndicator());
-                //if some or all data is loaded then
-                case ConnectionState.active:
-                case ConnectionState.done:
-                  final data = snapshot.data?.docs;
-                  _list =
-                      data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
+                  child: const Icon(Icons.message)),
+            ),
+            //list builder shows the list dynamically and optimizes the memory
+            body: StreamBuilder(
+                stream: APIs.getAllUsers(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    //tells whether data is loading of already loaded
+                    //if data is loading
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return const Center(child: CircularProgressIndicator());
+                    //if some or all data is loaded then
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      final data = snapshot.data?.docs;
+                      _list = data
+                              ?.map((e) => ChatUser.fromJson(e.data()))
+                              .toList() ??
                           [];
-                  if (_list.isNotEmpty) {
-                    return ListView.builder(
-                        padding: EdgeInsets.only(top: mq.height * 0.02),
-                        itemCount: _isSearching
-                            ? _searchList.length
-                            : _list
-                                .length, //API call here to get the number of users
-                        physics:
-                            const BouncingScrollPhysics(), //This adds the bouncing effect to the scroll
-                        itemBuilder: (context, index) {
-                          return ChatUserCard(
-                              user: _isSearching
-                                  ? _searchList[index]
-                                  : _list[index]);
-                          // return Text("Name: ${list[index]}");
-                        });
-                  } else {
-                    return const Center(
-                      child: Text(
-                        "No connections Found!",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    );
+                      if (_list.isNotEmpty) {
+                        return ListView.builder(
+                            padding: EdgeInsets.only(top: mq.height * 0.02),
+                            itemCount: _isSearching
+                                ? _searchList.length
+                                : _list
+                                    .length, //API call here to get the number of users
+                            physics:
+                                const BouncingScrollPhysics(), //This adds the bouncing effect to the scroll
+                            itemBuilder: (context, index) {
+                              return ChatUserCard(
+                                  user: _isSearching
+                                      ? _searchList[index]
+                                      : _list[index]);
+                              // return Text("Name: ${list[index]}");
+                            });
+                      } else {
+                        return const Center(
+                          child: Text(
+                            "No connections Found!",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        );
+                      }
                   }
-              }
-            }));
+                })),
+      ),
+    );
   }
 }

@@ -89,7 +89,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           bottom: 0,
                           right: 0,
                           child: MaterialButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _showBottomSheet();
+                            },
                             color: Colors.white70,
                             shape: const CircleBorder(),
                             child: const Icon(Icons.edit),
@@ -169,5 +171,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           )),
     );
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+        builder: (_) {
+          return ListView(
+            shrinkWrap:
+                true, //This will only show the part as much as the content is present
+            padding:
+                EdgeInsets.only(top: mq.height * .02, bottom: mq.height * .05),
+            children: [
+              const Text(
+                "Pick profile picture",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+              ),
+              SizedBox(height: mq.height * 0.02),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          fixedSize: Size(mq.width * .3, mq.height * .15)),
+                      onPressed: () {},
+                      child: Image.asset('images/gallery.png')),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          fixedSize: Size(mq.width * .3, mq.height * .15)),
+                      onPressed: () {},
+                      child: Image.asset('images/photo.png')),
+                ],
+              )
+            ],
+          );
+        });
   }
 }
